@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CompanyDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Car">
+    <Key>
+      <PropertyRef Name="Vin" />
+    </Key>
+    <Property Name="Vin" Type="String" MaxLength="17" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Make" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Model" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Year" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Displacement" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Fuel" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Power" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Owner" Type="Int32" />
+    <NavigationProperty Name="Customer" Relationship="CompanyDbModel.FK_Car_ToCustomer" FromRole="Car" ToRole="Customer" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Surname" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="30" FixedLength="true" Unicode="true" />
+    <Property Name="Mobile" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="40" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Cars" Relationship="CompanyDbModel.FK_Car_ToCustomer" FromRole="Customer" ToRole="Car" />
+  </EntityType>
+  <EntityContainer Name="CompanyDbEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Cars" EntityType="Self.Car" />
+    <EntitySet Name="Customers" EntityType="Self.Customer" />
+    <AssociationSet Name="FK_Car_ToCustomer" Association="CompanyDbModel.FK_Car_ToCustomer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Car" EntitySet="Cars" />
+    </AssociationSet>
+  </EntityContainer>
+  <Association Name="FK_Car_ToCustomer">
+    <End Type="CompanyDbModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="CompanyDbModel.Car" Role="Car" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Car">
+        <PropertyRef Name="Owner" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
